@@ -50,7 +50,7 @@ Next.js frontend for MENTORIA career guidance platform.
 
 ### GitHub Pages Setup
 
-The site is automatically built and deployed to the `gh-pages` branch via GitHub Actions when you push to the `main` branch.
+The site is automatically built and committed to the `docs/` folder via GitHub Actions when you push to the `main` branch.
 
 **Required GitHub Secrets:**
 1. Go to **Settings → Secrets and variables → Actions**
@@ -61,8 +61,8 @@ The site is automatically built and deployed to the `gh-pages` branch via GitHub
 **Enable GitHub Pages:**
 1. Go to **Settings → Pages**
 2. Set **Source** to: "Deploy from a branch"
-3. Set **Branch** to: `gh-pages` (the workflow creates this automatically)
-4. Leave the folder as `/ (root)`
+3. Set **Branch** to: `main`
+4. Set **Folder** to: `/ root`
 5. The site will deploy automatically
 
 Your live site will be at: `https://mihika-sarwate.github.io/DC-John/`
