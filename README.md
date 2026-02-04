@@ -50,7 +50,7 @@ Next.js frontend for MENTORIA career guidance platform.
 
 ### GitHub Pages Setup
 
-The site is automatically built and committed to the `docs/` folder via GitHub Actions when you push to the `main` branch.
+The site is built into the `docs/` folder (static export). GitHub Pages must serve from `docs/` for the repo site to work.
 
 **Required GitHub Secrets:**
 1. Go to **Settings → Secrets and variables → Actions**
@@ -62,7 +62,7 @@ The site is automatically built and committed to the `docs/` folder via GitHub A
 1. Go to **Settings → Pages**
 2. Set **Source** to: "Deploy from a branch"
 3. Set **Branch** to: `main`
-4. Set **Folder** to: `/ root`
+4. Set **Folder** to: `/docs`
 5. The site will deploy automatically
 
 Your live site will be at: `https://mihika-sarwate.github.io/DC-John/`
