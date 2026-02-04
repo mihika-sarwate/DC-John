@@ -41,9 +41,9 @@ export default function AboutSection({ section }: AboutSectionProps) {
   const cardBackground = resolveColor(section.cardBackgroundColor, '#ffffff')
   const headingColor = resolveColor(section.headingColor, '#111827')
   const textColor = resolveColor(section.textColor, '#374151')
-  const quoteAccentColor = resolveColor(section.quoteAccentColor, headingColor)
-  const quoteTextColor = resolveColor(section.quoteTextColor, textColor)
-  const iconBackground = toRgba(headingColor, 0.12)
+  const quoteAccentColor = resolveColor(section.quoteAccentColor, headingColor || '#111827')
+  const quoteTextColor = resolveColor(section.quoteTextColor, textColor || '#374151')
+  const iconBackground = toRgba(headingColor || '#111827', 0.12)
 
   return (
     <section id="about" style={{ backgroundColor: sectionBackground }} className="px-6 py-16">

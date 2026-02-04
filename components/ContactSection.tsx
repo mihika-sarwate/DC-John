@@ -52,7 +52,21 @@ export default function ContactSection({ section }: ContactSectionProps) {
     emailPlaceholder: 'you@example.com',
     phonePlaceholder: 'Your phone number',
     messagePlaceholder: 'How can we help?',
-    purposePlaceholder: 'Select a purpose'
+    purposePlaceholder: 'Select a purpose',
+    backgroundColor: '#f8fafc',
+    headingColor: '#111827',
+    textColor: '#374151',
+    cardBackgroundColor: '#ffffff',
+    buttonColor: '#111827',
+    buttonTextColor: '#ffffff',
+    inputBackgroundColor: '#ffffff',
+    inputTextColor: '#111827',
+    inputBorderColor: '#e5e7eb',
+    purposeOptions: [],
+    submitButtonText: 'Send Message',
+    email: 'contact@mentoria.com',
+    phone: '+1 (000) 000-0000',
+    address: 'Your address here'
   }
 
   const data = section ?? fallbackSection
