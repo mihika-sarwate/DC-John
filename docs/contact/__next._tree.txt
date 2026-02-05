@@ -1,2 +1,0 @@
-:HL["/DC-John/_next/static/chunks/ce5cb3d4a60e99b2.css","style"]
-0:{"buildId":"0WDkM4QT4gzHiPNHpqg6e","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"contact","paramType":null,"paramKey":"contact","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
