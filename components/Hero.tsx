@@ -12,15 +12,26 @@ interface HeroProps {
     backgroundColor?: string
     headingColor?: string
     textColor?: string
+    buttonColor?: string
+    buttonTextColor?: string
   }
 }
 
 export default function Hero({ section }: HeroProps) {
-  if (!section?.title) return null
-
-  const bgColor = section.backgroundColor || '#1a202c'
-  const headingColor = ensureContrast(section.headingColor, bgColor, '#ffffff')
-  const textColor = ensureContrast(section.textColor, bgColor, '#e5e7eb')
+  // Always render consistent structure to avoid hydration mismatch
+  const bgColor = section?.backgroundColor || '#1a202c'
+  const headingColor = ensureContrast(section?.headingColor, bgColor, '#ffffff')
+  const textColor = ensureContrast(section?.textColor, bgColor, '#e5e7eb')
+  const buttonBgColor = section?.buttonColor || headingColor
+  const buttonTextColorVal = section?.buttonTextColor || '#ffffff'
+  
+  // CTA button text with fallback
+  const ctaButtonText = section?.ctaText?.trim() || 'Discover Mentoria'
+  // Only show button if we have a link and text
+  const showButton = section?.ctaLink && ctaButtonText
+  
+  // Use fallback title to ensure consistent rendering
+  const title = section?.title || 'Welcome'
 
   return (
     <section
@@ -28,7 +39,7 @@ export default function Hero({ section }: HeroProps) {
       className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8"
       style={{ backgroundColor: bgColor }}
     >
-      {section.heroBackgroundImage && (
+      {section?.heroBackgroundImage && (
         <div className="absolute inset-0">
           <Image
             src={section.heroBackgroundImage?.asset ? urlFor(section.heroBackgroundImage).width(1920).height(1080).url() : ''}
@@ -44,10 +55,10 @@ export default function Hero({ section }: HeroProps) {
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
           style={{ color: headingColor }}
         >
-          {section.title}
+          {title}
         </h1>
 
-        {section.subtitle && (
+        {section?.subtitle && (
           <p 
             className="text-lg sm:text-xl md:text-2xl leading-relaxed"
             style={{ color: textColor }}
@@ -56,11 +67,11 @@ export default function Hero({ section }: HeroProps) {
           </p>
         )}
 
-        {section.heroImage && (
+        {section?.heroImage && (
           <div className="flex justify-center">
             <Image
               src={urlFor(section.heroImage).width(520).height(360).url()}
-              alt={section.heroImage?.alt || section.title || 'Hero image'}
+              alt={section.heroImage?.alt || title || 'Hero image'}
               width={520}
               height={360}
               className="h-auto w-full max-w-lg rounded-2xl object-cover"
@@ -68,17 +79,17 @@ export default function Hero({ section }: HeroProps) {
           </div>
         )}
 
-        {section.ctaText && section.ctaLink && (
+        {showButton && (
           <div className="pt-4">
             <a
-              href={normalizeCtaLink(section.ctaLink)}
+              href={normalizeCtaLink(section!.ctaLink!)}
               className="inline-block px-8 py-3 sm:px-10 sm:py-4 font-semibold rounded-lg hover:opacity-90 transition-opacity"
               style={{ 
-                backgroundColor: headingColor,
-                color: bgColor
+                backgroundColor: buttonBgColor,
+                color: buttonTextColorVal
               }}
             >
-              {section.ctaText}
+              {ctaButtonText}
             </a>
           </div>
         )}

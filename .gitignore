@@ -12,6 +12,9 @@ package-lock.json
 /build
 /.next
 
+# Sanity Schemas (kept local only)
+/schemas/
+
 # Misc
 .DS_Store
 *.pem

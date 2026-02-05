@@ -27,7 +27,9 @@ export const HERO_QUERY = `*[_type == "hero"][0]{
   heroBackgroundImage,
   backgroundColor,
   headingColor,
-  textColor
+  textColor,
+  buttonColor,
+  buttonTextColor
 }`
 
 export const ABOUT_QUERY = `*[_type == "about"][0]{
@@ -130,6 +132,27 @@ export const TESTIMONIALS_QUERY = `*[_type == "testimonial"]{
   cardBackgroundColor,
   headingColor,
   textColor
+}`
+
+export const BLOG_SECTION_QUERY = `*[_type == "blogSection"][0]{
+  sectionTitle,
+  sectionSubtitle,
+  backgroundColor,
+  headingColor,
+  textColor,
+  cardBackgroundColor,
+  cardHeadingColor,
+  cardTextColor,
+  articles[]-> {
+    _id,
+    title,
+    excerpt,
+    articleLink,
+    thumbnail,
+    openInNewTab
+  },
+  ctaText,
+  ctaLink
 }`
 
 export const CONTACT_INFO_QUERY = `*[_type == "contactInfo"][0]{

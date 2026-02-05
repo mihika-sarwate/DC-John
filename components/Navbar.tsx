@@ -23,6 +23,50 @@ type NavigationData = {
   activeLinkColor?: string
 }
 
+// Logo component with proper sizing, fallback, and image error handling
+function BrandLogo({ 
+  logoUrl, 
+  logoAlt, 
+  brandName 
+}: { 
+  logoUrl?: string
+  logoAlt: string
+  brandName?: string
+}) {
+  const [imageError, setImageError] = useState(false)
+
+  const hasLogo = logoUrl && !imageError
+  const hasBrandName = brandName
+
+  // If neither logo nor brand name, return null
+  if (!hasLogo && !hasBrandName) {
+    return null
+  }
+
+  return (
+    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+      {/* Logo Container - Square logo support with proper sizing */}
+      {hasLogo && (
+        <div className="logo-container flex items-center justify-center flex-shrink-0 h-10 sm:h-12 md:h-14 w-10 sm:w-12 md:w-14 p-1">
+          <img
+            src={logoUrl}
+            alt={logoAlt}
+            onError={() => setImageError(true)}
+            className="object-contain w-full h-full"
+          />
+        </div>
+      )}
+      
+      {/* Brand Name */}
+      {hasBrandName && (
+        <span className="text-sm sm:text-base md:text-base font-bold whitespace-nowrap flex-shrink-0">
+          {brandName}
+        </span>
+      )}
+    </div>
+  )
+}
+
 export default function Navbar({ navigation }: { navigation?: NavigationData | null }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -57,7 +101,7 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
     handleAnchorClick(e, targetHref)
   }
 
-  const logoUrl = navigation?.logo?.asset ? urlFor(navigation.logo).width(120).height(40).url() : undefined
+  const logoUrl = navigation?.logo?.asset ? urlFor(navigation.logo).width(200).height(200).url() : undefined
   const logoAlt = navigation?.logo?.alt || navigation?.brandName || 'Brand logo'
   const navBg = navigation?.backgroundColor || 'var(--primary-color)'
   const navText = navigation?.textColor || 'var(--navbar-text-color)'
@@ -69,28 +113,31 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
       style={{ backgroundColor: navBg, color: navText }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo/Site Name */}
+        {/* Fixed height navbar container */}
+        <div className="flex items-center justify-between h-16 sm:h-16 md:h-16">
+          {/* Logo/Brand Section - Clickable */}
           <a
             href="#home"
             onClick={(e) => handleAnchorClick(e, '#home')}
-            className="flex items-center gap-3 text-lg sm:text-xl font-bold hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
             style={{ color: 'inherit' }}
+            aria-label={`Go to home - ${navigation?.brandName || 'Brand'}`}
           >
-            {logoUrl && (
-              <img src={logoUrl} alt={logoAlt} className="h-8 w-auto" />
-            )}
-            {navigation?.brandName && <span>{navigation.brandName}</span>}
+            <BrandLogo
+              logoUrl={logoUrl}
+              logoAlt={logoAlt}
+              brandName={navigation?.brandName}
+            />
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-8 flex-shrink-0 ml-auto">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleAnchorClick(e, link.href)}
-                className="text-base font-medium hover:opacity-80 transition-opacity cursor-pointer"
+                className="text-sm font-medium hover:opacity-80 transition-opacity cursor-pointer whitespace-nowrap"
                 style={{ color: 'inherit' }}
               >
                 {link.label}
@@ -100,7 +147,7 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
               <a
                 href={navigation.ctaButton.link}
                 onClick={(e) => handleCtaClick(e, navigation.ctaButton?.link)}
-                className="ml-2 rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
+                className="rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
                 style={{ backgroundColor: navActive, color: navBg }}
               >
                 {navigation.ctaButton.text}
@@ -111,8 +158,9 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-md hover:opacity-80 transition-opacity"
-            aria-label="Toggle menu"
+            className="md:hidden p-2 rounded-md hover:opacity-80 transition-opacity flex-shrink-0 ml-auto"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
           >
             <svg
               className="h-6 w-6"
@@ -136,10 +184,10 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden"
-          style={{ backgroundColor: navBg }}
+          className="md:hidden border-t"
+          style={{ borderTopColor: `${navText}20` }}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="px-4 py-3 space-y-2">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -155,7 +203,7 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
               <a
                 href={navigation.ctaButton.link}
                 onClick={(e) => handleCtaClick(e, navigation.ctaButton?.link)}
-                className="block rounded-md px-3 py-2 text-base font-semibold transition-opacity hover:opacity-80"
+                className="block rounded-md px-3 py-2 text-base font-semibold transition-opacity hover:opacity-80 mt-2"
                 style={{ backgroundColor: navActive, color: navBg }}
               >
                 {navigation.ctaButton.text}

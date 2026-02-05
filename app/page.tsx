@@ -4,6 +4,7 @@ import MethodologySection from '@/components/MethodologySection'
 import ServicesSection from '@/components/ServicesSection'
 import PricingCard from '@/components/PricingCard'
 import TestimonialCard from '@/components/TestimonialCard'
+import BlogSection from '@/components/BlogSection'
 import ContactSection from '@/components/ContactSection'
 import MentoriaProgram from '@/components/MentoriaProgram'
 import Footer from '@/components/Footer'
@@ -18,6 +19,7 @@ import {
   PRICING_QUERY,
   TESTIMONIALS_SECTION_QUERY,
   TESTIMONIALS_QUERY,
+  BLOG_SECTION_QUERY,
   CONTACT_SECTION_QUERY,
   MENTORIA_QUERY,
   FOOTER_QUERY
@@ -38,6 +40,7 @@ export default async function Home() {
     pricingPlans,
     testimonialsSection,
     testimonials,
+    blogSection,
     contactSection,
     mentoriaData,
     footerData
@@ -52,6 +55,7 @@ export default async function Home() {
     fetchSanityData(PRICING_QUERY),
     fetchSanityData(TESTIMONIALS_SECTION_QUERY),
     fetchSanityData(TESTIMONIALS_QUERY),
+    fetchSanityData(BLOG_SECTION_QUERY),
     fetchSanityData(CONTACT_SECTION_QUERY),
     fetchSanityData(MENTORIA_QUERY),
     fetchSanityData(FOOTER_QUERY)
@@ -60,17 +64,7 @@ export default async function Home() {
   return (
     <main className="w-full">
       {/* Hero Section */}
-      {heroSection ? (
-        <Hero section={heroSection} />
-      ) : (
-        <section
-          id="home"
-          className="w-full min-h-screen flex items-center justify-center"
-          style={{ color: 'var(--text-color)' }}
-        >
-          <div>Loading hero...</div>
-        </section>
-      )}
+      <Hero section={heroSection} />
 
       {/* About Section */}
       {aboutSection ? <AboutSection section={aboutSection} /> : null}
@@ -193,6 +187,9 @@ export default async function Home() {
           )}
         </div>
       </section>
+
+      {/* Blog Section */}
+      <BlogSection section={blogSection} />
 
       {/* Contact Section */}
       {contactSection && <ContactSection section={contactSection} />}
