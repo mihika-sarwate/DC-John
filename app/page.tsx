@@ -1,18 +1,17 @@
 import Hero from '@/components/Hero'
 import AboutSection from '@/components/About'
-import MethodologySection from '@/components/MethodologySection'
 import ServicesSection from '@/components/ServicesSection'
 import PricingCard from '@/components/PricingCard'
 import TestimonialCard from '@/components/TestimonialCard'
 import BlogSection from '@/components/BlogSection'
 import ContactSection from '@/components/ContactSection'
 import MentoriaProgram from '@/components/MentoriaProgram'
+import MethodologySection from '@/components/MethodologySection'
 import Footer from '@/components/Footer'
 import { fetchSanityData } from '@/lib/sanity'
 import {
   HERO_QUERY,
   ABOUT_QUERY,
-  METHODOLOGY_QUERY,
   SERVICES_SECTION_QUERY,
   SERVICES_QUERY,
   PRICING_SECTION_QUERY,
@@ -24,42 +23,46 @@ import {
   MENTORIA_QUERY,
   FOOTER_QUERY
 } from '@/lib/queries'
+import { METHODOLOGY_SECTION_QUERY } from '@/lib/methodologyQueries'
 
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function Home() {
-  // Fetch all section data in parallel
-  const [
-    heroSection,
-    aboutSection,
-    methodologySection,
-    methodologySteps,
-    servicesSection,
-    services,
-    pricingSection,
-    pricingPlans,
-    testimonialsSection,
-    testimonials,
-    blogSection,
-    contactSection,
-    mentoriaData,
-    footerData
-  ] = await Promise.all([
-    fetchSanityData(HERO_QUERY),
-    fetchSanityData(ABOUT_QUERY),
-    fetchSanityData(MENTORIA_QUERY),
-    fetchSanityData(METHODOLOGY_QUERY),
-    fetchSanityData(SERVICES_SECTION_QUERY),
-    fetchSanityData(SERVICES_QUERY),
-    fetchSanityData(PRICING_SECTION_QUERY),
-    fetchSanityData(PRICING_QUERY),
-    fetchSanityData(TESTIMONIALS_SECTION_QUERY),
-    fetchSanityData(TESTIMONIALS_QUERY),
-    fetchSanityData(BLOG_SECTION_QUERY),
-    fetchSanityData(CONTACT_SECTION_QUERY),
-    fetchSanityData(MENTORIA_QUERY),
-    fetchSanityData(FOOTER_QUERY)
-  ])
+  console.log('Page rendering started')
+  
+  try {
+    // Fetch all section data in parallel
+    const [
+      heroSection,
+      aboutSection,
+      servicesSection,
+      services,
+      pricingSection,
+      pricingPlans,
+      testimonialsSection,
+      testimonials,
+      blogSection,
+      contactSection,
+      methodologySection,
+      mentoriaData,
+      footerData
+    ] = await Promise.all([
+      fetchSanityData(HERO_QUERY),
+      fetchSanityData(ABOUT_QUERY),
+      fetchSanityData(SERVICES_SECTION_QUERY),
+      fetchSanityData(SERVICES_QUERY),
+      fetchSanityData(PRICING_SECTION_QUERY),
+      fetchSanityData(PRICING_QUERY),
+      fetchSanityData(TESTIMONIALS_SECTION_QUERY),
+      fetchSanityData(TESTIMONIALS_QUERY),
+      fetchSanityData(BLOG_SECTION_QUERY),
+      fetchSanityData(CONTACT_SECTION_QUERY),
+      fetchSanityData(METHODOLOGY_SECTION_QUERY),
+      fetchSanityData(MENTORIA_QUERY),
+      fetchSanityData(FOOTER_QUERY)
+    ])
+
+    console.log('Data fetched successfully')
 
   return (
     <main className="w-full">
@@ -69,11 +72,11 @@ export default async function Home() {
       {/* About Section */}
       {aboutSection ? <AboutSection section={aboutSection} /> : null}
 
-      {/* Methodology Section */}
-      {methodologySection ? <MethodologySection section={methodologySection} steps={methodologySteps} /> : null}
-
       {/* Mentoria Section */}
       {mentoriaData ? <MentoriaProgram mentoria={mentoriaData} /> : null}
+
+      {/* Methodology Section */}
+      {methodologySection ? <MethodologySection section={methodologySection} /> : null}
 
       {/* Services Section */}
       {servicesSection ? <ServicesSection section={servicesSection} services={services} /> : null}
@@ -198,4 +201,18 @@ export default async function Home() {
       {footerData && <Footer footer={footerData} services={services} />}
     </main>
   )
+  } catch (error) {
+    console.error('Error in Home page:', error)
+    return (
+      <main className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-4">Error Loading Page</h1>
+          <p className="text-gray-600">Please check the console for details</p>
+          <pre className="mt-4 p-4 bg-gray-100 rounded text-left text-sm overflow-auto">
+            {error instanceof Error ? error.message : 'Unknown error'}
+          </pre>
+        </div>
+      </main>
+    )
+  }
 }

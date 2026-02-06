@@ -1,13 +1,16 @@
 import Image from 'next/image'
+import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity'
 
 type BlogPost = {
   _id: string
   title?: string
+  slug?: { current: string }
   excerpt?: string
-  articleLink?: string
+  author?: string
+  publishDate?: string
   thumbnail?: any
-  openInNewTab?: boolean
+  content?: any[]
 }
 
 type BlogSectionProps = {
@@ -21,13 +24,10 @@ type BlogSectionProps = {
     cardHeadingColor?: string
     cardTextColor?: string
     articles?: BlogPost[]
-    ctaText?: string
-    ctaLink?: string
   } | null
 }
 
 export default function BlogSection({ section }: BlogSectionProps) {
-  // If no section data or no articles, don't render
   if (!section || !section.articles || section.articles.length === 0) {
     return null
   }
@@ -46,7 +46,6 @@ export default function BlogSection({ section }: BlogSectionProps) {
       style={{ backgroundColor: bgColor }}
     >
       <div className="mx-auto max-w-7xl">
-        {/* Section Header */}
         <div className="mb-12 text-center">
           {section.sectionTitle && (
             <h2
@@ -66,9 +65,8 @@ export default function BlogSection({ section }: BlogSectionProps) {
           )}
         </div>
 
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
-          {section.articles.slice(0, 3).map((article) => (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {section.articles.map((article) => (
             <BlogCard
               key={article._id}
               article={article}
@@ -78,24 +76,6 @@ export default function BlogSection({ section }: BlogSectionProps) {
             />
           ))}
         </div>
-
-        {/* CTA Button */}
-        {section.ctaText && section.ctaLink && (
-          <div className="text-center">
-            <a
-              href={section.ctaLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-8 py-3 font-semibold rounded-lg transition-opacity hover:opacity-90"
-              style={{
-                backgroundColor: headingColor,
-                color: bgColor
-              }}
-            >
-              {section.ctaText}
-            </a>
-          </div>
-        )}
       </div>
     </section>
   )
@@ -116,34 +96,53 @@ function BlogCard({
     ? urlFor(article.thumbnail).width(600).height(400).url()
     : null
 
-  const target = article.openInNewTab !== false ? '_blank' : '_self'
-  const rel = article.openInNewTab !== false ? 'noopener noreferrer' : undefined
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return null
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+      }).format(new Date(dateString))
+    } catch {
+      return null
+    }
+  }
+
+  const formattedDate = formatDate(article.publishDate)
 
   return (
-    <a
-      href={article.articleLink || '#'}
-      target={target}
-      rel={rel}
-      className="group block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+    <div
+      className="rounded-lg overflow-hidden shadow-md"
       style={{ backgroundColor: cardBgColor }}
     >
-      {/* Thumbnail */}
       {thumbnailUrl && (
         <div className="relative w-full h-48 overflow-hidden bg-gray-100">
           <Image
             src={thumbnailUrl}
             alt={article.thumbnail?.alt || article.title || 'Blog post thumbnail'}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover"
           />
         </div>
       )}
 
-      {/* Content */}
       <div className="p-6">
+        {(formattedDate || article.author) && (
+          <div
+            style={{ color: cardTextColor, opacity: 0.75 }}
+            className="text-sm mb-3 flex flex-wrap gap-2"
+          >
+            {formattedDate && <span>{formattedDate}</span>}
+            {formattedDate && article.author && <span>•</span>}
+            {article.author && <span>By {article.author}</span>}
+          </div>
+        )}
+
         <h3
           style={{ color: cardHeadingColor }}
-          className="text-xl font-bold mb-3 line-clamp-2 group-hover:underline"
+          className="text-xl font-bold mb-3"
         >
           {article.title || 'Untitled Article'}
         </h3>
@@ -151,32 +150,103 @@ function BlogCard({
         {article.excerpt && (
           <p
             style={{ color: cardTextColor }}
-            className="text-base leading-relaxed line-clamp-2 mb-4"
+            className="text-base leading-relaxed mb-4"
           >
             {article.excerpt}
           </p>
         )}
 
-        <div
-          style={{ color: cardHeadingColor }}
-          className="text-sm font-semibold inline-flex items-center gap-2"
-        >
-          Read Article
-          <svg
-            className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
+        {article.content && article.content.length > 0 && (
+          <div className="mt-4 prose prose-sm max-w-none">
+            <PortableText
+              value={article.content}
+              components={{
+                block: {
+                  normal: ({ children }) => (
+                    <p
+                      style={{ color: cardTextColor }}
+                      className="mb-3 leading-relaxed"
+                    >
+                      {children}
+                    </p>
+                  ),
+                  h1: ({ children }) => (
+                    <h1
+                      style={{ color: cardHeadingColor }}
+                      className="text-2xl font-bold mb-3 mt-4"
+                    >
+                      {children}
+                    </h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2
+                      style={{ color: cardHeadingColor }}
+                      className="text-xl font-bold mb-2 mt-3"
+                    >
+                      {children}
+                    </h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3
+                      style={{ color: cardHeadingColor }}
+                      className="text-lg font-bold mb-2 mt-3"
+                    >
+                      {children}
+                    </h3>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote
+                      style={{ borderLeftColor: cardHeadingColor }}
+                      className="border-l-4 pl-4 italic my-3"
+                    >
+                      {children}
+                    </blockquote>
+                  ),
+                },
+                list: {
+                  bullet: ({ children }) => (
+                    <ul className="list-disc ml-6 mb-3 space-y-1">
+                      {children}
+                    </ul>
+                  ),
+                  number: ({ children }) => (
+                    <ol className="list-decimal ml-6 mb-3 space-y-1">
+                      {children}
+                    </ol>
+                  ),
+                },
+                listItem: {
+                  bullet: ({ children }) => (
+                    <li style={{ color: cardTextColor }}>{children}</li>
+                  ),
+                  number: ({ children }) => (
+                    <li style={{ color: cardTextColor }}>{children}</li>
+                  ),
+                },
+                marks: {
+                  strong: ({ children }) => (
+                    <strong className="font-bold">{children}</strong>
+                  ),
+                  em: ({ children }) => (
+                    <em className="italic">{children}</em>
+                  ),
+                  link: ({ children, value }) => (
+                    <a
+                      href={value?.href}
+                      style={{ color: cardHeadingColor }}
+                      className="hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {children}
+                    </a>
+                  ),
+                },
+              }}
             />
-          </svg>
-        </div>
+          </div>
+        )}
       </div>
-    </a>
+    </div>
   )
 }
