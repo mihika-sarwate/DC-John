@@ -1,4 +1,5 @@
-'use client'
+import { PortableText } from '@portabletext/react'
+import { portableTextComponents } from './portableTextComponents'
 
 export default function MentoriaProgram({ mentoria }: any) {
   if (!mentoria) return <div>No mentoria data</div>
@@ -23,7 +24,7 @@ export default function MentoriaProgram({ mentoria }: any) {
           )}
         </div>
 
-        {mentoria.steps && mentoria.steps.length > 0 && (
+        {mentoria.methodologyContent && mentoria.methodologyContent.length > 0 && (
           <div className="mb-12">
             <h3
               className="mb-6 text-2xl font-semibold"
@@ -31,40 +32,8 @@ export default function MentoriaProgram({ mentoria }: any) {
             >
               Methodology
             </h3>
-            <div className="space-y-6">
-              {mentoria.steps.map((step: any) => (
-                <div
-                  key={step._id}
-                  className="flex flex-col gap-4 rounded-2xl border p-6 shadow-sm sm:flex-row"
-                  style={{
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)'
-                  }}
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold"
-                    style={{
-                      backgroundColor: 'var(--primary-color)',
-                      color: 'var(--navbar-text-color)'
-                    }}
-                  >
-                    {step.stepNumber}
-                  </div>
-                  <div className="flex-1">
-                    <h4
-                      className="text-xl font-semibold"
-                      style={{ color: 'var(--text-color)' }}
-                    >
-                      {step.stepTitle}
-                    </h4>
-                    <p
-                      className="mt-2 text-base leading-relaxed"
-                      style={{ color: 'var(--text-color)', opacity: 0.85 }}
-                    >
-                      {step.stepDescription}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="prose max-w-none" style={{ color: 'var(--text-color)' }}>
+              <PortableText value={mentoria.methodologyContent} components={portableTextComponents} />
             </div>
           </div>
         )}
@@ -88,10 +57,10 @@ export default function MentoriaProgram({ mentoria }: any) {
                   }}
                 >
                   <span
-                    className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-semibold"
+                    className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-semibold flex-shrink-0"
                     style={{
-                      backgroundColor: 'var(--primary-color)',
-                      color: 'var(--navbar-text-color)'
+                      backgroundColor: mentoria.featureBadgeColor || '#2563eb',
+                      color: mentoria.featureBadgeTextColor || '#ffffff'
                     }}
                   >
                     {i + 1}

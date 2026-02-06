@@ -70,21 +70,16 @@ export const SERVICES_QUERY = `*[_type == "service"]{
   icon
 }`
 
-export const METHODOLOGY_QUERY = `*[_type == "methodologyStep"] | order(stepNumber asc){
-  _id,
-  stepNumber,
-  stepTitle,
-  stepDescription,
-  stepIcon
-}`
-
 export const MENTORIA_QUERY = `*[_type == "mentoria"][0] {
   ...,
+  methodologyContent,
   steps[] -> {
     _id,
     stepNumber,
     stepTitle,
-    stepDescription
+    stepDescription,
+    badgeBackgroundColor,
+    badgeTextColor
   }
 }`
 
@@ -146,13 +141,24 @@ export const BLOG_SECTION_QUERY = `*[_type == "blogSection"][0]{
   articles[]-> {
     _id,
     title,
+    slug,
     excerpt,
-    articleLink,
+    author,
+    publishDate,
     thumbnail,
-    openInNewTab
-  },
-  ctaText,
-  ctaLink
+    content
+  }
+}`
+
+export const BLOG_POST_QUERY = `*[_type == "blogPost" && slug.current == $slug][0]{
+  _id,
+  title,
+  slug,
+  excerpt,
+  author,
+  publishDate,
+  thumbnail,
+  content
 }`
 
 export const CONTACT_INFO_QUERY = `*[_type == "contactInfo"][0]{

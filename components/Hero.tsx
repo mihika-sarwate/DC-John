@@ -39,10 +39,10 @@ export default function Hero({ section }: HeroProps) {
       className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8"
       style={{ backgroundColor: bgColor }}
     >
-      {section?.heroBackgroundImage && (
+      {section?.heroBackgroundImage?.asset && (
         <div className="absolute inset-0">
           <Image
-            src={section.heroBackgroundImage?.asset ? urlFor(section.heroBackgroundImage).width(1920).height(1080).url() : ''}
+            src={urlFor(section.heroBackgroundImage).width(1920).height(1080).url()}
             alt={section.heroBackgroundImage?.alt || 'Hero background'}
             fill
             className="object-cover opacity-40"
@@ -67,7 +67,7 @@ export default function Hero({ section }: HeroProps) {
           </p>
         )}
 
-        {section?.heroImage && (
+        {section?.heroImage?.asset && (
           <div className="flex justify-center">
             <Image
               src={urlFor(section.heroImage).width(520).height(360).url()}
