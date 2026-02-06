@@ -25,8 +25,6 @@ import {
 } from '@/lib/queries'
 import { METHODOLOGY_SECTION_QUERY } from '@/lib/methodologyQueries'
 
-export const revalidate = 0
-
 export default async function Home() {
   console.log('Page rendering started')
   
