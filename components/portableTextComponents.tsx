@@ -22,5 +22,10 @@ export const portableTextComponents = {
         </figure>
       )
     }
+  },
+  marks: {
+    red: ({ children }: { children: any }) => (
+      <span style={{ color: '#dc2626' }}>{children}</span>
+    )
   }
 }

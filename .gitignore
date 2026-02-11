@@ -3,7 +3,6 @@ node_modules/
 /.pnp
 .pnp.js
 yarn.lock
-package-lock.json
 
 # Testing
 /coverage
@@ -12,8 +11,12 @@ package-lock.json
 /build
 /.next
 
-# Sanity Schemas (kept local only)
+# Sanity Schemas and Studio (kept local only)
 /schemas/
+sanity.config.js
+/sanity/
+.sanity/
+/studio/
 
 # Misc
 .DS_Store
@@ -35,15 +38,10 @@ yarn-error.log*
 *.swp
 *.swo
 
-# Sanity (EXCLUDE ALL SANITY CONFIG AND SCHEMAS)
-/schemas/
-sanity.config.js
-/sanity/
-
 # OS
 Thumbs.db
 
 # Next.js
 .turbo/
-node_modules
-docs/dev/
+docs/
+dist/

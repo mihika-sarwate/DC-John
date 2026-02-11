@@ -5,6 +5,7 @@ import PricingCard from '@/components/PricingCard'
 import TestimonialCard from '@/components/TestimonialCard'
 import BlogSection from '@/components/BlogSection'
 import ContactSection from '@/components/ContactSection'
+import CoursesBlogSection from '@/components/CoursesBlogSection'
 import MentoriaProgram from '@/components/MentoriaProgram'
 import MethodologySection from '@/components/MethodologySection'
 import Footer from '@/components/Footer'
@@ -19,6 +20,7 @@ import {
   TESTIMONIALS_SECTION_QUERY,
   TESTIMONIALS_QUERY,
   BLOG_SECTION_QUERY,
+  COURSE_BLOG_QUERY,
   CONTACT_SECTION_QUERY,
   MENTORIA_QUERY,
   FOOTER_QUERY
@@ -41,6 +43,7 @@ export default async function Home() {
       testimonials,
       blogSection,
       contactSection,
+      courseBlog,
       methodologySection,
       mentoriaData,
       footerData
@@ -55,6 +58,7 @@ export default async function Home() {
       fetchSanityData(TESTIMONIALS_QUERY),
       fetchSanityData(BLOG_SECTION_QUERY),
       fetchSanityData(CONTACT_SECTION_QUERY),
+      fetchSanityData(COURSE_BLOG_QUERY),
       fetchSanityData(METHODOLOGY_SECTION_QUERY),
       fetchSanityData(MENTORIA_QUERY),
       fetchSanityData(FOOTER_QUERY)
@@ -194,6 +198,9 @@ export default async function Home() {
 
       {/* Contact Section */}
       {contactSection && <ContactSection section={contactSection} />}
+
+      {/* Courses & Blog Section */}
+      {courseBlog ? <CoursesBlogSection section={courseBlog} /> : null}
 
       {/* Footer */}
       {footerData && <Footer footer={footerData} services={services} />}

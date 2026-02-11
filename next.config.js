@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'export',
   distDir: 'docs',
-  basePath: '/DC-John',
+  basePath: process.env.NODE_ENV === 'production' ? '/DC-John' : '',
   images: {
     unoptimized: true,
   },

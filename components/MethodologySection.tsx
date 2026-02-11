@@ -1,5 +1,4 @@
 import { PortableText } from '@portabletext/react'
-import LifePlanningTable from './LifePlanningTable'
 import { portableTextComponents } from './portableTextComponents'
 
 interface MethodologySectionProps {
@@ -36,11 +35,6 @@ export default function MethodologySection({ section }: MethodologySectionProps)
               {section.title}
             </h2>
           )}
-        </div>
-        
-        {/* Life Planning Table */}
-        <div style={{ color: textColor }}>
-          <LifePlanningTable />
         </div>
         
         {section.content && section.content.length > 0 && (

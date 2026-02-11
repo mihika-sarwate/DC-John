@@ -150,6 +150,15 @@ export const BLOG_SECTION_QUERY = `*[_type == "blogSection"][0]{
   }
 }`
 
+export const COURSE_BLOG_QUERY = `*[_type == "courseBlog"][0]{
+  sectionTitle,
+  entries[]{
+    title,
+    image,
+    content
+  }
+}`
+
 export const BLOG_POST_QUERY = `*[_type == "blogPost" && slug.current == $slug][0]{
   _id,
   title,
