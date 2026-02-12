@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'Career guidance platform',
 }
 
+export const dynamic = 'error'
+
 export default async function RootLayout({
   children,
 }: {

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "sanity dev",
     "start": "sanity start",
-    "build": "sanity build",
+    "build": "next build",
+    "sanity:build": "sanity build",
     "next:dev": "next dev",
     "next:build": "next build",
     "next:start": "next start"
@@ -26,6 +27,7 @@
     "@portabletext/react": "^6.0.2",
     "@tailwindcss/postcss": "^4.1.18",
     "next": "^16.1.6",
+    "next-sanity": "^12.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "styled-components": "^6.3.8"
