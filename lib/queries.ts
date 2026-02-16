@@ -20,7 +20,6 @@ export const NAVIGATION_QUERY = `*[_type == "navigation"][0]{
 
 export const HERO_QUERY = `*[_type == "hero"][0]{
   title,
-  subtitle,
   ctaText,
   ctaLink,
   heroImage,
@@ -29,7 +28,9 @@ export const HERO_QUERY = `*[_type == "hero"][0]{
   headingColor,
   textColor,
   buttonColor,
-  buttonTextColor
+  buttonTextColor,
+  richTitle,
+  richSubtitle
 }`
 
 export const ABOUT_QUERY = `*[_type == "about"][0]{

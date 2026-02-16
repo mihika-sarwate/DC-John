@@ -9,40 +9,76 @@ export const metadata: Metadata = {
   description: 'Career guidance platform',
 }
 
-export const dynamic = 'error'
+
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const settings = await fetchSanityData(SITE_SETTINGS_QUERY)
-  const navigation = await fetchSanityData(NAVIGATION_QUERY)
+  try {
+    let settings: any = {}
+    let navigation: any = null
 
-  const primaryColor = settings?.primaryColor || '#1a202c'
-  const secondaryColor = settings?.secondaryColor || '#2d3748'
-  const backgroundColor = settings?.backgroundColor || '#ffffff'
-  const textColor = ensureReadableColor(settings?.textColor, backgroundColor)
-  const navbarTextColor = ensureReadableColor(settings?.textColor, primaryColor)
+    const fs = await import('node:fs')
+    fs.appendFileSync('debug.log', 'RootLayout: Start\n')
 
-  const style = {
-    '--primary-color': primaryColor,
-    '--secondary-color': secondaryColor,
-    '--background-color': backgroundColor,
-    '--text-color': textColor,
-    '--navbar-text-color': navbarTextColor,
-    backgroundColor: backgroundColor,
-    color: textColor,
-  } as React.CSSProperties
+    try {
+      fs.appendFileSync('debug.log', 'RootLayout: Fetching settings\n')
+      settings = await fetchSanityData(SITE_SETTINGS_QUERY)
+      fs.appendFileSync('debug.log', 'RootLayout: Fetched settings\n')
 
-  return (
-    <html lang="en">
-      <body style={style}>
-        <Navbar navigation={navigation} />
-        {children}
-      </body>
-    </html>
-  )
+      navigation = await fetchSanityData(NAVIGATION_QUERY)
+      fs.appendFileSync('debug.log', 'RootLayout: Fetched navigation\n')
+    } catch (fetchError: any) {
+      console.error('Data fetch error:', fetchError)
+      fs.appendFileSync('debug.log', `RootLayout: Fetch Error: ${fetchError.message}\n`)
+    }
+
+    const primaryColor = settings?.primaryColor || '#1a202c'
+    const secondaryColor = settings?.secondaryColor || '#2d3748'
+    const backgroundColor = settings?.backgroundColor || '#ffffff'
+    const textColor = ensureReadableColor(settings?.textColor, backgroundColor)
+    const navbarTextColor = ensureReadableColor(settings?.textColor, primaryColor)
+
+    fs.appendFileSync('debug.log', 'RootLayout: Prepared styles\n')
+
+    const style = {
+      '--primary-color': primaryColor,
+      '--secondary-color': secondaryColor,
+      '--background-color': backgroundColor,
+      '--text-color': textColor,
+      '--navbar-text-color': navbarTextColor,
+      backgroundColor: backgroundColor,
+      color: textColor,
+    } as React.CSSProperties
+
+    return (
+      <html lang="en">
+        <body style={style}>
+          <Navbar navigation={navigation} />
+          {children}
+        </body>
+      </html>
+    )
+  } catch (renderError: any) {
+    console.error('RootLayout Render Error:', renderError)
+    try {
+      const fs = await import('node:fs')
+      fs.writeFileSync('layout-render-error.log', `Error: ${renderError.message}\nStack: ${renderError.stack}`)
+    } catch (e) { }
+
+    return (
+      <html lang="en">
+        <body>
+          <div style={{ padding: 20 }}>
+            <h1>Something went wrong</h1>
+            <pre>{renderError.message}</pre>
+          </div>
+        </body>
+      </html>
+    )
+  }
 }
 
 function ensureReadableColor(color: string | undefined, background: string) {

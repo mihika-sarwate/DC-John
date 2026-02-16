@@ -27,12 +27,18 @@ import {
 } from '@/lib/queries'
 import { METHODOLOGY_SECTION_QUERY } from '@/lib/methodologyQueries'
 
-export const dynamic = 'error'
+
+
+
+// Revalidate this page every 10 seconds
+export const revalidate = 10
 
 export default async function Home() {
-  console.log('Page rendering started')
-  
+  const fs = await import('node:fs')
+  fs.appendFileSync('debug.log', 'Home: Start\n')
+
   try {
+    fs.appendFileSync('debug.log', 'Home: Fetching data\n')
     // Fetch all section data in parallel
     const [
       heroSection,
@@ -68,146 +74,146 @@ export default async function Home() {
 
     console.log('Data fetched successfully')
 
-  return (
-    <main className="w-full">
-      {/* Hero Section */}
-      <Hero section={heroSection} />
+    return (
+      <main className="w-full">
+        {/* Hero Section */}
+        <Hero section={heroSection} />
 
-      {/* About Section */}
-      {aboutSection ? <AboutSection section={aboutSection} /> : null}
+        {/* About Section */}
+        {aboutSection ? <AboutSection section={aboutSection} /> : null}
 
-      {/* Mentoria Section */}
-      {mentoriaData ? <MentoriaProgram mentoria={mentoriaData} /> : null}
+        {/* Mentoria Section */}
+        {mentoriaData ? <MentoriaProgram mentoria={mentoriaData} /> : null}
 
-      {/* Methodology Section */}
-      {methodologySection ? <MethodologySection section={methodologySection} /> : null}
+        {/* Methodology Section */}
+        {methodologySection ? <MethodologySection section={methodologySection} /> : null}
 
-      {/* Services Section */}
-      {servicesSection ? <ServicesSection section={servicesSection} services={services} /> : null}
+        {/* Services Section */}
+        {servicesSection ? <ServicesSection section={servicesSection} services={services} /> : null}
 
-      {/* Pricing Section */}
-      {pricingSection && (
-        <section 
-          id="pricing"
-          style={{ backgroundColor: pricingSection.backgroundColor || '#f9fafb' }} 
-          className="px-6 py-16"
-        >
-          <div className="mx-auto max-w-7xl">
-            {/* Section Header */}
-            <div className="mb-12 text-center">
-              {pricingSection.sectionTitle && (
-                <h2 
-                  style={{ color: pricingSection.headingColor || '#111827' }} 
-                  className="mb-4 text-4xl font-bold md:text-5xl"
-                >
-                  {pricingSection.sectionTitle}
-                </h2>
-              )}
-              {pricingSection.sectionSubtitle && (
-                <p 
-                  style={{ color: pricingSection.textColor || '#374151' }} 
-                  className="mx-auto max-w-2xl text-lg leading-relaxed"
-                >
-                  {pricingSection.sectionSubtitle}
-                </p>
-              )}
-            </div>
-
-            {/* Pricing Cards Grid */}
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {pricingPlans && pricingPlans.length > 0 ? (
-                pricingPlans.map((plan: any) => (
-                  <PricingCard
-                    key={plan._id}
-                    plan={plan}
-                    sectionHeadingColor={pricingSection.headingColor}
-                    sectionTextColor={pricingSection.textColor}
-                  />
-                ))
-              ) : (
-                <p 
-                  style={{ color: pricingSection.textColor || '#374151' }} 
-                  className="col-span-full text-center"
-                >
-                  No pricing plans available.
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Testimonials Section */}
-      <section 
-        id="testimonials"
-        style={{ backgroundColor: testimonialsSection?.backgroundColor || '#ffffff' }} 
-        className="px-6 py-16"
-      >
-        <div className="mx-auto max-w-7xl">
-          {testimonialsSection ? (
-            <>
+        {/* Pricing Section */}
+        {pricingSection && (
+          <section
+            id="pricing"
+            style={{ backgroundColor: pricingSection.backgroundColor || '#f9fafb' }}
+            className="px-6 py-16"
+          >
+            <div className="mx-auto max-w-7xl">
               {/* Section Header */}
               <div className="mb-12 text-center">
-                {testimonialsSection.sectionTitle && (
-                  <h2 
-                    style={{ color: testimonialsSection.headingColor || '#111827' }} 
+                {pricingSection.sectionTitle && (
+                  <h2
+                    style={{ color: pricingSection.headingColor || '#111827' }}
                     className="mb-4 text-4xl font-bold md:text-5xl"
                   >
-                    {testimonialsSection.sectionTitle}
+                    {pricingSection.sectionTitle}
                   </h2>
                 )}
-                {testimonialsSection.sectionSubtitle && (
-                  <p 
-                    style={{ color: testimonialsSection.textColor || '#374151' }} 
+                {pricingSection.sectionSubtitle && (
+                  <p
+                    style={{ color: pricingSection.textColor || '#374151' }}
                     className="mx-auto max-w-2xl text-lg leading-relaxed"
                   >
-                    {testimonialsSection.sectionSubtitle}
+                    {pricingSection.sectionSubtitle}
                   </p>
                 )}
               </div>
 
-              {/* Testimonials Grid */}
+              {/* Pricing Cards Grid */}
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {testimonials && testimonials.length > 0 ? (
-                  testimonials.map((testimonial: any) => (
-                    <TestimonialCard
-                      key={testimonial._id}
-                      testimonial={testimonial}
-                      sectionHeadingColor={testimonialsSection.headingColor}
-                      sectionTextColor={testimonialsSection.textColor}
+                {pricingPlans && pricingPlans.length > 0 ? (
+                  pricingPlans.map((plan: any) => (
+                    <PricingCard
+                      key={plan._id}
+                      plan={plan}
+                      sectionHeadingColor={pricingSection.headingColor}
+                      sectionTextColor={pricingSection.textColor}
                     />
                   ))
                 ) : (
-                  <p 
-                    style={{ color: testimonialsSection.textColor || '#374151' }} 
+                  <p
+                    style={{ color: pricingSection.textColor || '#374151' }}
                     className="col-span-full text-center"
                   >
-                    No testimonials available.
+                    No pricing plans available.
                   </p>
                 )}
               </div>
-            </>
-          ) : (
-            <div className="p-8 text-center bg-gray-50 rounded-lg">
-              <p className="text-gray-600 font-semibold">Testimonials section data missing</p>
             </div>
-          )}
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Blog Section */}
-      <BlogSection section={blogSection} />
+        {/* Testimonials Section */}
+        <section
+          id="testimonials"
+          style={{ backgroundColor: testimonialsSection?.backgroundColor || '#ffffff' }}
+          className="px-6 py-16"
+        >
+          <div className="mx-auto max-w-7xl">
+            {testimonialsSection ? (
+              <>
+                {/* Section Header */}
+                <div className="mb-12 text-center">
+                  {testimonialsSection.sectionTitle && (
+                    <h2
+                      style={{ color: testimonialsSection.headingColor || '#111827' }}
+                      className="mb-4 text-4xl font-bold md:text-5xl"
+                    >
+                      {testimonialsSection.sectionTitle}
+                    </h2>
+                  )}
+                  {testimonialsSection.sectionSubtitle && (
+                    <p
+                      style={{ color: testimonialsSection.textColor || '#374151' }}
+                      className="mx-auto max-w-2xl text-lg leading-relaxed"
+                    >
+                      {testimonialsSection.sectionSubtitle}
+                    </p>
+                  )}
+                </div>
 
-      {/* Contact Section */}
-      {contactSection && <ContactSection section={contactSection} />}
+                {/* Testimonials Grid */}
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                  {testimonials && testimonials.length > 0 ? (
+                    testimonials.map((testimonial: any) => (
+                      <TestimonialCard
+                        key={testimonial._id}
+                        testimonial={testimonial}
+                        sectionHeadingColor={testimonialsSection.headingColor}
+                        sectionTextColor={testimonialsSection.textColor}
+                      />
+                    ))
+                  ) : (
+                    <p
+                      style={{ color: testimonialsSection.textColor || '#374151' }}
+                      className="col-span-full text-center"
+                    >
+                      No testimonials available.
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="p-8 text-center bg-gray-50 rounded-lg">
+                <p className="text-gray-600 font-semibold">Testimonials section data missing</p>
+              </div>
+            )}
+          </div>
+        </section>
 
-      {/* Courses & Blog Section */}
-      {courseBlog ? <CoursesBlogSection section={courseBlog} /> : null}
+        {/* Blog Section */}
+        <BlogSection section={blogSection} />
 
-      {/* Footer */}
-      {footerData && <Footer footer={footerData} services={services} />}
-    </main>
-  )
+        {/* Contact Section */}
+        {contactSection && <ContactSection section={contactSection} />}
+
+        {/* Courses & Blog Section */}
+        {courseBlog ? <CoursesBlogSection section={courseBlog} /> : null}
+
+        {/* Footer */}
+        {footerData && <Footer footer={footerData} services={services} />}
+      </main>
+    )
   } catch (error) {
     console.error('Error in Home page:', error)
     return (

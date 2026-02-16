@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import { urlFor } from '@/lib/sanity'
+import { PortableText } from '@portabletext/react'
 
 interface HeroProps {
   section?: {
     title?: string
-    subtitle?: string
+    richTitle?: any
+    richSubtitle?: any
     ctaText?: string
     ctaLink?: string
     heroImage?: any
@@ -17,19 +19,30 @@ interface HeroProps {
   }
 }
 
+const RedDecorator = ({ children }: { children: React.ReactNode }) => (
+  <span style={{ color: '#DC2626' }}>{children}</span>
+)
+
+const ptComponents = {
+  marks: {
+    red: RedDecorator,
+  },
+}
+
 export default function Hero({ section }: HeroProps) {
   // Always render consistent structure to avoid hydration mismatch
-  const bgColor = section?.backgroundColor || '#1a202c'
-  const headingColor = ensureContrast(section?.headingColor, bgColor, '#ffffff')
-  const textColor = ensureContrast(section?.textColor, bgColor, '#e5e7eb')
+  const bgColor = section?.backgroundColor || '#ffffff'
+  // Force black color as requested, ignoring Sanity field for now
+  const headingColor = '#000000'
+  const textColor = '#000000'
   const buttonBgColor = section?.buttonColor || headingColor
   const buttonTextColorVal = section?.buttonTextColor || '#ffffff'
-  
+
   // CTA button text with fallback
   const ctaButtonText = section?.ctaText?.trim() || 'Discover Mentoria'
   // Only show button if we have a link and text
   const showButton = section?.ctaLink && ctaButtonText
-  
+
   // Use fallback title to ensure consistent rendering
   const title = section?.title || 'Welcome'
 
@@ -51,20 +64,24 @@ export default function Hero({ section }: HeroProps) {
         </div>
       )}
       <div className="relative z-10 max-w-4xl w-full text-center space-y-8">
-        <h1 
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+        <div
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight"
           style={{ color: headingColor }}
         >
-          {title}
-        </h1>
+          {hasPortableTextContent(section?.richTitle) ? (
+            <PortableText value={section!.richTitle} components={ptComponents} />
+          ) : (
+            <h1>{title}</h1>
+          )}
+        </div>
 
-        {section?.subtitle && (
-          <p 
-            className="text-lg sm:text-xl md:text-2xl leading-relaxed"
+        {hasPortableTextContent(section?.richSubtitle) && (
+          <div
+            className="text-base sm:text-lg md:text-xl leading-relaxed"
             style={{ color: textColor }}
           >
-            {section.subtitle}
-          </p>
+            <PortableText value={section!.richSubtitle} components={ptComponents} />
+          </div>
         )}
 
         {section?.heroImage?.asset && (
@@ -84,7 +101,7 @@ export default function Hero({ section }: HeroProps) {
             <a
               href={normalizeCtaLink(section!.ctaLink!)}
               className="inline-block px-8 py-3 sm:px-10 sm:py-4 font-semibold rounded-lg hover:opacity-90 transition-opacity"
-              style={{ 
+              style={{
                 backgroundColor: buttonBgColor,
                 color: buttonTextColorVal
               }}
@@ -131,4 +148,12 @@ function contrastRatio(bgLuminance: number, fgLuminance: number) {
   const lighter = Math.max(bgLuminance, fgLuminance) + 0.05
   const darker = Math.min(bgLuminance, fgLuminance) + 0.05
   return lighter / darker
+}
+
+function hasPortableTextContent(blocks: any[]) {
+  if (!blocks || !Array.isArray(blocks) || blocks.length === 0) return false
+  return blocks.some(block => {
+    if (block._type !== 'block' || !block.children) return true
+    return block.children.some((child: any) => child.text && child.text.trim() !== '')
+  })
 }
