@@ -114,21 +114,22 @@ function BlogCard({
 
   return (
     <div
-      className="rounded-lg overflow-hidden shadow-md"
+      className="flex flex-col h-full rounded-lg overflow-hidden shadow-md transition-shadow hover:shadow-lg"
       style={{ backgroundColor: cardBgColor }}
     >
       {thumbnailUrl && (
-        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+        <div className="relative w-full aspect-video bg-gray-100">
           <Image
             src={thumbnailUrl}
             alt={article.thumbnail?.alt || article.title || 'Blog post thumbnail'}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
         </div>
       )}
 
-      <div className="p-6">
+      <div className="p-6 flex-1 flex flex-col">
         {(formattedDate || article.author) && (
           <div
             style={{ color: cardTextColor, opacity: 0.75 }}

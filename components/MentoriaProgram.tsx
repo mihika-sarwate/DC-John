@@ -46,18 +46,18 @@ export default function MentoriaProgram({ mentoria }: any) {
             >
               Features
             </h3>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {mentoria.features.map((feature: string, i: number) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 rounded-xl border px-4 py-3"
+                  className="flex flex-col items-start gap-4 rounded-xl border p-6 transition-all hover:bg-black/5"
                   style={{
-                    borderColor: 'rgba(255, 255, 255, 0.12)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)'
+                    borderColor: 'color-mix(in srgb, var(--text-color), transparent 85%)',
+                    backgroundColor: 'color-mix(in srgb, var(--text-color), transparent 97%)'
                   }}
                 >
                   <span
-                    className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-semibold flex-shrink-0"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-base font-bold flex-shrink-0"
                     style={{
                       backgroundColor: mentoria.featureBadgeColor || '#2563eb',
                       color: mentoria.featureBadgeTextColor || '#ffffff'
@@ -65,7 +65,7 @@ export default function MentoriaProgram({ mentoria }: any) {
                   >
                     {i + 1}
                   </span>
-                  <p className="text-base" style={{ color: 'var(--text-color)', opacity: 0.9 }}>
+                  <p className="text-lg leading-relaxed" style={{ color: 'var(--text-color)', opacity: 0.9 }}>
                     {feature}
                   </p>
                 </div>

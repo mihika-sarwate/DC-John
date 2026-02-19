@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+@layer base {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 2rem;
+    }
+
+    p {
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+    }
+
+    section {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
+
+    /* Target elements with the specific red color used in the project to make them bold */
+    [style*="color: #DC2626"],
+    [style*="color: rgb(220, 38, 38)"] {
+        font-weight: 700 !important;
+    }
+
+    /* Global styles for content links (emails, phones, and URLs) */
+    a[href^="mailto:"],
+    a[href^="tel:"],
+    a[href^="http"]:not([class*="btn"]):not([class*="button"]):not([class*="nav-link"]) {
+        color: #2563eb;
+        /* Blue-600 */
+        text-decoration: none;
+    }
+
+    a[href^="mailto:"]:hover,
+    a[href^="tel:"]:hover,
+    a[href^="http"]:not([class*="btn"]):not([class*="button"]):not([class*="nav-link"]):hover {
+        text-decoration: underline;
+    }
+}
+
 body {
+    /* Keeping existing body style if needed, though layout.tsx overrides it */
     background-color: blue;
 }

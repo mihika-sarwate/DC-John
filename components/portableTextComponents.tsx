@@ -26,6 +26,21 @@ export const portableTextComponents = {
   marks: {
     red: ({ children }: { children: any }) => (
       <span style={{ color: '#dc2626' }}>{children}</span>
-    )
+    ),
+    link: ({ children, value }: { children: any, value?: any }) => {
+      const href = value?.href || '#'
+      const isExternal = href.startsWith('http')
+      return (
+        <a
+          href={href}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          style={{ color: '#2563eb', textDecoration: 'none' }}
+          className="hover:underline"
+        >
+          {children}
+        </a>
+      )
+    }
   }
 }

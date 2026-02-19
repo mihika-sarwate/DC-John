@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity'
 import { portableTextComponents } from './portableTextComponents'
@@ -35,15 +36,18 @@ export default function CoursesBlogSection({ section }: CoursesBlogSectionProps)
               </h3>
 
               {entry.image && entry.image.asset && (
-                <div className="mb-6 w-full">
-                  <img
+                <div className="mb-6 w-full relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                  <Image
                     src={urlFor(entry.image).width(800).auto('format').url()}
                     alt={entry.image.alt || entry.title || 'Entry image'}
-                    className="w-full rounded-lg mb-4"
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 800px"
+                    className="object-cover"
                   />
                   {entry.image.alt && (
-                    <p className="text-sm opacity-70">{entry.image.alt}</p>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2 text-white text-xs opacity-0 hover:opacity-100 transition-opacity">
+                      {entry.image.alt}
+                    </div>
                   )}
                 </div>
               )}
