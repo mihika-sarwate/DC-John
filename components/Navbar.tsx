@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { urlFor } from '@/lib/sanity'
 
 type NavigationItem = {
@@ -24,11 +24,11 @@ type NavigationData = {
 }
 
 // Logo component with proper sizing, fallback, and image error handling
-function BrandLogo({ 
-  logoUrl, 
-  logoAlt, 
-  brandName 
-}: { 
+function BrandLogo({
+  logoUrl,
+  logoAlt,
+  brandName
+}: {
   logoUrl?: string
   logoAlt: string
   brandName?: string
@@ -56,7 +56,7 @@ function BrandLogo({
           />
         </div>
       )}
-      
+
       {/* Brand Name */}
       {hasBrandName && (
         <span className="text-sm sm:text-base md:text-base font-bold whitespace-nowrap flex-shrink-0">
@@ -67,8 +67,27 @@ function BrandLogo({
   )
 }
 
-export default function Navbar({ navigation }: { navigation?: NavigationData | null }) {
+export default function Navbar({ navigation: initialNavigation }: { navigation?: NavigationData | null }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [navigation, setNavigation] = useState<NavigationData | null | undefined>(initialNavigation)
+
+  useEffect(() => {
+    setNavigation(initialNavigation)
+  }, [initialNavigation])
+
+  useEffect(() => {
+    const fetchNav = async () => {
+      try {
+        const { fetchSanityData } = await import('@/lib/sanity')
+        const { NAVIGATION_QUERY } = await import('@/lib/queries')
+        const data = await fetchSanityData(NAVIGATION_QUERY)
+        if (data) setNavigation(data)
+      } catch (e) {
+        console.error('Failed to fetch live navigation:', e)
+      }
+    }
+    fetchNav()
+  }, [])
 
   const navLinks = (navigation?.menuItems || [])
     .filter((item) => item.isVisible !== false)
@@ -81,10 +100,10 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     setMobileMenuOpen(false)
-    
+
     const targetId = href.replace('#', '')
     const targetElement = document.getElementById(targetId)
-    
+
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth' })
       return
@@ -108,7 +127,7 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
   const navActive = navigation?.activeLinkColor || navText
 
   return (
-    <nav 
+    <nav
       className="sticky top-0 z-50 shadow-md"
       style={{ backgroundColor: navBg, color: navText }}
     >
@@ -183,7 +202,7 @@ export default function Navbar({ navigation }: { navigation?: NavigationData | n
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="md:hidden border-t"
           style={{ borderTopColor: `${navText}20` }}
         >
