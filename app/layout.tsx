@@ -7,6 +7,9 @@ import { NAVIGATION_QUERY, SITE_SETTINGS_QUERY } from '@/lib/queries'
 export const metadata: Metadata = {
   title: 'MENTORIA - Career Guidance',
   description: 'Career guidance platform',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 
