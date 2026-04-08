@@ -65,7 +65,7 @@ const ptComponents: any = {
             >
               https://oversimplify.in
             </a>{' '}
-            to understand &#39;Lifelong
+            to understand &#39;Lifelong Learning&#39;
           </p>
         )
       }
