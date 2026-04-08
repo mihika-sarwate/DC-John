@@ -27,6 +27,52 @@ const BlueDecorator = ({ children }: { children: React.ReactNode }) => (
 )
 
 const ptComponents: any = {
+  block: {
+    normal: ({ children, value }: { children: React.ReactNode; value: any }) => {
+      const text = Array.isArray(value?.children)
+        ? value.children.map((c: any) => c?.text || '').join('')
+        : ''
+
+      if (/Both parents.*Click here\./i.test(text)) {
+        return (
+          <p>
+            <strong>Both parents </strong>
+            must see this video before your child takes the subscription to understand the Methodology. Click here.{' '}
+            <a
+              href="https://youtu.be/mytJzDawl9M?si=hOYM7bHwtWTF_1o2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+              style={{ color: '#2563EB' }}
+            >
+              https://youtu.be/mytJzDawl9M?si=hOYM7bHwtWTF_1o2
+            </a>
+          </p>
+        )
+      }
+
+      if (/The student.*must study.*understand/i.test(text)) {
+        return (
+          <p>
+            <strong>The student </strong>
+            must study{' '}
+            <a
+              href="https://oversimplify.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+              style={{ color: '#2563EB' }}
+            >
+              https://oversimplify.in
+            </a>{' '}
+            to understand &#39;Lifelong
+          </p>
+        )
+      }
+
+      return <p>{children}</p>
+    },
+  },
   marks: {
     red: RedDecorator,
     blue: BlueDecorator,
