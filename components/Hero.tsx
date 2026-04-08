@@ -22,10 +22,14 @@ interface HeroProps {
 const RedDecorator = ({ children }: { children: React.ReactNode }) => (
   <span style={{ color: '#DC2626' }}>{children}</span>
 )
+const BlueDecorator = ({ children }: { children: React.ReactNode }) => (
+  <span style={{ color: '#2563EB' }}>{children}</span>
+)
 
 const ptComponents: any = {
   marks: {
     red: RedDecorator,
+    blue: BlueDecorator,
   },
   list: {
     bullet: ({ children }: { children: React.ReactNode }) => (
@@ -77,7 +81,7 @@ export default function Hero({ section }: HeroProps) {
           style={{ color: headingColor }}
         >
           {hasPortableTextContent(section?.richTitle) ? (
-            <PortableText value={section!.richTitle} components={ptComponents} />
+            <PortableText value={applyBlueHighlights(section!.richTitle)} components={ptComponents} />
           ) : (
             <h1>{title}</h1>
           )}
@@ -100,7 +104,7 @@ export default function Hero({ section }: HeroProps) {
             className="mx-auto max-w-6xl pt-6 text-base leading-relaxed sm:text-lg md:text-xl"
             style={{ color: textColor }}
           >
-            <PortableText value={section!.richSubtitle} components={ptComponents} />
+            <PortableText value={applyBlueHighlights(section!.richSubtitle)} components={ptComponents} />
           </div>
         )}
       </div>
@@ -144,4 +148,85 @@ function hasPortableTextContent(blocks: any[]) {
     if (block._type !== 'block' || !block.children) return true
     return block.children.some((child: any) => child.text && child.text.trim() !== '')
   })
+}
+
+function applyBlueHighlights(blocks: any[]) {
+  if (!Array.isArray(blocks)) return blocks
+
+  return blocks.map((block: any) => {
+    if (!block || block._type !== 'block' || !Array.isArray(block.children)) return block
+
+    const newChildren: any[] = []
+    for (const child of block.children) {
+      if (!child || child._type !== 'span' || typeof child.text !== 'string' || child.text.length === 0) {
+        newChildren.push(child)
+        continue
+      }
+      newChildren.push(...splitAndMarkBlue(child))
+    }
+
+    return { ...block, children: newChildren }
+  })
+}
+
+function splitAndMarkBlue(span: any) {
+  const text = span.text as string
+  const segments: any[] = []
+  const phraseRegex = /MENTORIA\.COM\s*\(in Career Guidance\)/gi
+  let cursor = 0
+  let segmentIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = phraseRegex.exec(text)) !== null) {
+    const start = match.index
+    const end = start + match[0].length
+
+    if (start > cursor) {
+      segments.push(createSpanSegment(span, text.slice(cursor, start), false, `${segmentIndex++}`))
+    }
+    segments.push(createSpanSegment(span, text.slice(start, end), true, `${segmentIndex++}`))
+    cursor = end
+  }
+
+  if (cursor < text.length) {
+    const tail = text.slice(cursor)
+    segments.push(...highlightMentoriaWord(span, tail, segmentIndex))
+  } else if (segments.length === 0) {
+    segments.push(createSpanSegment(span, text, false, '0'))
+  }
+
+  return segments.filter((s) => s.text.length > 0)
+}
+
+function highlightMentoriaWord(span: any, text: string, baseIndex: number) {
+  const out: any[] = []
+  const wordRegex = /\bMENTORIA\b/gi
+  let cursor = 0
+  let segmentIndex = baseIndex
+  let match: RegExpExecArray | null
+
+  while ((match = wordRegex.exec(text)) !== null) {
+    const start = match.index
+    const end = start + match[0].length
+
+    if (start > cursor) out.push(createSpanSegment(span, text.slice(cursor, start), false, `${segmentIndex++}`))
+    out.push(createSpanSegment(span, text.slice(start, end), true, `${segmentIndex++}`))
+    cursor = end
+  }
+
+  if (cursor < text.length) out.push(createSpanSegment(span, text.slice(cursor), false, `${segmentIndex++}`))
+  if (out.length === 0) out.push(createSpanSegment(span, text, false, `${segmentIndex++}`))
+  return out
+}
+
+function createSpanSegment(originalSpan: any, text: string, makeBlue: boolean, suffix: string) {
+  const originalMarks = Array.isArray(originalSpan.marks) ? originalSpan.marks : []
+  const marks = makeBlue && !originalMarks.includes('blue') ? [...originalMarks, 'blue'] : originalMarks
+
+  return {
+    ...originalSpan,
+    _key: `${originalSpan._key || 's'}-${suffix}`,
+    text,
+    marks,
+  }
 }
